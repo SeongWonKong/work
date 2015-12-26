@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,23 +14,50 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/add")
-public class VisitorBoardAddServlet extends HttpServlet {
+@WebServlet("/modify")
+public class VisitorBoardModifyServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) 
 			throws ServletException, IOException{
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<html><head><title>방명록 등록</title></head>");
-		out.println("<body><h1>방명록 등록</h1>");
-		out.println("<form action='add' method='post'>");
-		out.println("EMAIL : <input type='text' name='email'><br>");
-		out.println("암호 : <input type='password' name='password'><br>");
-		out.println("내용 : <input type='text' name='content'><br>");
-		out.println("<input type='submit' value='추가'>");
-		out.println("<input type='reset' value='취소'>");
-		out.println("</form>");
-		out.println("</body></html>");
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		try{
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			
+			conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost/studydb",
+					"study",
+					"study");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(
+					"select * from VISITOR_BOARD" +
+					" where VNO=" + request.getParameter("vno"));
+			
+			rs.next();
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<html><head><title>방명록 등록</title></head>");
+			out.println("<body><h1>방명록 등록</h1>");
+			out.println("<form action='add' method='post'>");
+			out.println();
+			out.println("EMAIL : <input type='text' name='email' value='"+rs.getString("EMAIL")+"' disabled><br>");
+			out.println("암호 : <input type='password' name='password'><br>");
+			out.println("내용 : <input type='text' name='content' value="+rs.getString("CONTENT")+"'><br>");
+			out.println("<input type='submit' value='수정하기'>");
+			out.println("<input type='reset' value='취소'>");
+			out.println("</form>");
+			out.println("</body></html>");
+		}catch(Exception e){
+			throw new ServletException(e);
+		}finally{
+			try {if(stmt!=null) stmt.close();} catch(Exception e){}
+			try {if(conn!=null) conn.close();} catch(Exception e){}
+		}
+		
+		
+
 	}
 	
 	@Override

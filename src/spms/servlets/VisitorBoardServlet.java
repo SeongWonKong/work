@@ -46,7 +46,8 @@ public class VisitorBoardServlet extends GenericServlet {
 						rs.getString("CONTENT") + "," +
 						rs.getString("EMAIL") + "," +
 						rs.getDate("DATE") + " " +
-						rs.getTime("DATE") + "<br>");
+						rs.getTime("DATE") + 
+						"<a href='modify?vno=" + rs.getInt("VNO") +"'>수정하기</a>" + "<br>");
 			}
 			out.println("</body></html>");
 		}
