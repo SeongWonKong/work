@@ -34,7 +34,7 @@ public class VisitorBoardServlet extends GenericServlet {
 			rs = stmt.executeQuery(
 					"select VNO,CONTENT,EMAIL,DATE" +
 					" from VISITOR_BOARD" +
-					" order by VNO ASC");
+					" order by VNO DESC");
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println("<html><head><title>±Û¸ñ·Ï</title></head>");
@@ -45,7 +45,8 @@ public class VisitorBoardServlet extends GenericServlet {
 						rs.getInt("VNO") + "," +
 						rs.getString("CONTENT") + "," +
 						rs.getString("EMAIL") + "," +
-						rs.getDate("DATE")+"<br>");
+						rs.getDate("DATE") + " " +
+						rs.getTime("DATE") + "<br>");
 			}
 			out.println("</body></html>");
 		}
