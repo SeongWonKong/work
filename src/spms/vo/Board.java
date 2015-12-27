@@ -1,5 +1,6 @@
 package spms.vo;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class Board {
@@ -9,7 +10,7 @@ public class Board {
 	protected String password;
 	protected String content;
 	protected Date date;
-	
+	protected Time time;
 	
 	public int getVno(){
 		return no;
@@ -55,5 +56,13 @@ public class Board {
 		this.date = date;
 		return this;
 	}
-
+	
+	public Time getTime(){
+		return time;
+	}
+	
+	public Board setTime(Time time){
+		this.time = time;
+		return this;
+	}
 }

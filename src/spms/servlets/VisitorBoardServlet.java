@@ -31,11 +31,8 @@ public class VisitorBoardServlet extends GenericServlet {
 		
 		try{
 			ServletContext sc = this.getServletContext();
-			Class.forName(sc.getInitParameter("driver"));
-			conn = DriverManager.getConnection(
-					sc.getInitParameter("url"),
-					sc.getInitParameter("username"),
-					sc.getInitParameter("password"));
+			
+			conn = (Connection)sc.getAttribute("conn");
 			stmt = conn.createStatement();
 			
 			rs = stmt.executeQuery(
@@ -51,7 +48,8 @@ public class VisitorBoardServlet extends GenericServlet {
 						.setVno(rs.getInt("VNO"))
 						.setEmail(rs.getString("EMAIL"))
 						.setContent(rs.getString("CONTENT"))
-						.setDate(rs.getDate("DATE")));
+						.setDate(rs.getDate("DATE"))
+						.setTime(rs.getTime("DATE")));
 			}
 			
 			request.setAttribute("boards", boards);
@@ -65,7 +63,7 @@ public class VisitorBoardServlet extends GenericServlet {
 		}finally{
 			try{if(rs!=null) rs.close();} catch(Exception e){}
 			try{if(stmt!=null) stmt.close();} catch(Exception e){}
-			try{if(conn!=null) conn.close();} catch(Exception e){}
+		//	try{if(conn!=null) conn.close();} catch(Exception e){}
 		}
 	}
 

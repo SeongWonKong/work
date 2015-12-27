@@ -10,7 +10,9 @@
 <title>방명록</title>
 </head>
 <body>
-<h1>방명록 등록</h1>
+<div style="margin:0 auto; width:500px; text-align:center;">
+
+<h1>방명록 수정</h1>
 
 <%
 Board board = (Board)request.getAttribute("board");
@@ -23,5 +25,6 @@ EMAIL : <input type='text' name='email' value='<%=board.getEmail() %>' readonly>
 <input type='submit' value='수정하기'>
 <input type='reset' value='취소'>
 </form>
+</div>
 </body>
 </html>

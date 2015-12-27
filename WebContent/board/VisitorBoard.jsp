@@ -7,21 +7,38 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>글 목록</title>
+<title>방명록</title>
 </head>
 <body>
-<h1>글 목록</h1>
+<div style="margin:0 auto; width:500px; text-align:center;">
+<h1>방명록</h1>
 <p><a href='add'>새로운 글 쓰기</a></p>
+</div>
+
+
+<table style="margin:0 auto; width:600px; text-align:center">
 <%
 ArrayList<Board> boards = (ArrayList<Board>)request.getAttribute("boards");
 for(Board board : boards){
 %>
-<%=board.getVno() %>,
-<%=board.getEmail() %>,
-<%=board.getContent() %>,
+<tr>
+<td style="height:20px">
+<%=board.getEmail() %>
 <%=board.getDate() %>
+<%=board.getTime() %>
+</td>
+</tr>
+<tr>
+<td style="height:20px">
+<%=board.getContent() %>
 <a href='modify?vno=<%=board.getVno() %>'> [수정] </a><br>
+</td>
+</tr>
+<tr>
+<td style="height:15px">
+</td>
+</tr>
 <%} %>
-
+</table>
 </body>
 </html>

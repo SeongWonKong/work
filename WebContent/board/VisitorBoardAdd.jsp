@@ -10,13 +10,14 @@
 <title>방명록 등록</title>
 </head>
 <body>
+<div style="margin:0 auto; width:500px; text-align:center;">
 <h1>방명록 등록</h1>
 <form action='add' method='post'>
-이메일 : <input type='text' name='email'><br>
-비밀번호 : <input type='password' name='password'><br>
-내용 : <input type='text' name='content'><br>
+이메일 : <input type='text' name='email'> 비밀번호 : <input type='password' name='password'><br><br>
+내용 : <input type='text' name='content' style="width:400px;"><br><br>
 <input type='submit' value='등록'>
 <input type='reset' value='취소'>
 </form>
+</div>
 </body>
 </html>
