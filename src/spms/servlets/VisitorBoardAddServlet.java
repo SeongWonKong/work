@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,17 +20,10 @@ public class VisitorBoardAddServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) 
 			throws ServletException, IOException{
 		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<html><head><title>방명록 등록</title></head>");
-		out.println("<body><h1>방명록 등록</h1>");
-		out.println("<form action='add' method='post'>");
-		out.println("EMAIL : <input type='text' name='email'><br>");
-		out.println("암호 : <input type='password' name='password'><br>");
-		out.println("내용 : <input type='text' name='content'><br>");
-		out.println("<input type='submit' value='추가'>");
-		out.println("<input type='reset' value='취소'>");
-		out.println("</form>");
-		out.println("</body></html>");
+		
+		RequestDispatcher rd = request.getRequestDispatcher("/board/VisitorBoardAdd.jsp");
+		rd.include(request, response);
+
 	}
 	
 	@Override
@@ -55,13 +49,15 @@ public class VisitorBoardAddServlet extends HttpServlet {
 			stmt.setString(3,  request.getParameter("content"));
 			stmt.executeUpdate();
 			
-			response.setContentType("text/html; charset=UTF-8");
+			response.sendRedirect("visitorboard");
+		/*	response.setContentType("text/html; charset=UTF-8");
+			
 			PrintWriter out = response.getWriter();
 			out.println("<html><head><title>방명록 등록 결과</title></head>");
 			out.println("<body>");
 			out.println("<p>등록 성공입니다!</p>");
 			out.println("<a href='visitorboard'>목록으로</a>");
-			out.println("</body></html>");
+			out.println("</body></html>");*/
 		}catch(Exception e){
 			throw new ServletException(e);
 		}finally{

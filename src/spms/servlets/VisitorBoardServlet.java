@@ -6,13 +6,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.servlet.GenericServlet;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+
+import spms.vo.Board;
 
 
 @WebServlet("/visitorboard")
@@ -26,16 +30,6 @@ public class VisitorBoardServlet extends GenericServlet {
 		ResultSet rs = null;
 		
 		try{
-			
-			/*
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/studydb",
-					"study",
-					"study");
-			stmt = conn.createStatement();
-			*/
-			
 			ServletContext sc = this.getServletContext();
 			Class.forName(sc.getInitParameter("driver"));
 			conn = DriverManager.getConnection(
@@ -49,20 +43,22 @@ public class VisitorBoardServlet extends GenericServlet {
 					" from VISITOR_BOARD" +
 					" order by VNO DESC");
 			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.println("<html><head><title>글목록</title></head>");
-			out.println("<body><h1>글목록</h1>");
-			out.println("<p><a href='add'>새로운 글 쓰기</a></p>");
+			
+			ArrayList<Board> boards = new ArrayList<Board>();
+			
 			while(rs.next()){
-				out.println(
-						rs.getInt("VNO") + "," +
-						rs.getString("CONTENT") + "," +
-						rs.getString("EMAIL") + "," +
-						rs.getDate("DATE") + " " +
-						rs.getTime("DATE") + 
-						"<a href='modify?vno=" + rs.getInt("VNO") +"'>수정하기</a>" + "<br>");
+				boards.add(new Board()
+						.setVno(rs.getInt("VNO"))
+						.setEmail(rs.getString("EMAIL"))
+						.setContent(rs.getString("CONTENT"))
+						.setDate(rs.getDate("DATE")));
 			}
-			out.println("</body></html>");
+			
+			request.setAttribute("boards", boards);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/board/VisitorBoard.jsp");
+			rd.include(request, response);
+			
 		}
 		catch(Exception e){
 			throw new ServletException(e);

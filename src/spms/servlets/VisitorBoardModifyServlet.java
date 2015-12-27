@@ -7,13 +7,17 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import spms.vo.Board;
 
 @WebServlet("/modify")
 public class VisitorBoardModifyServlet extends HttpServlet {
@@ -40,19 +44,20 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			
 			rs.next();
 			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.println("<html><head><title>방명록 등록</title></head>");
-			out.println("<body><h1>방명록 등록</h1>");
-			out.println("<form action='modify' method='post'>");
-			out.println();
-			out.println("EMAIL : <input type='text' name='email' value='"+rs.getString("EMAIL")+"' readonly><br>");
-			out.println("암호 : <input type='password' name='password' required><br>");
-			out.println("내용 : <input type='text' name='content' value='"+rs.getString("CONTENT")+"'><br>");
-			out.println("<input type='hidden' name='vno' value='"+ request.getParameter("vno") +"'>");
-			out.println("<input type='submit' value='수정하기'>");
-			out.println("<input type='reset' value='취소'>");
-			out.println("</form>");
-			out.println("</body></html>");
+			
+			Board board = new Board()
+		//	ArrayList<Board> boards = new ArrayList<Board>();		
+		//	boards.add(new Board()
+					.setVno(rs.getInt("VNO"))
+					.setEmail(rs.getString("EMAIL"))
+					.setContent(rs.getString("CONTENT"))
+					.setDate(rs.getDate("DATE"));//);
+			request.setAttribute("board", board);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/board/VisitorBoardModify.jsp");
+			rd.include(request, response);
+			
+
 		}catch(Exception e){
 			throw new ServletException(e);
 		}finally{
@@ -85,13 +90,14 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			stmt.setString(1,  request.getParameter("content"));
 			stmt.executeUpdate();
 			
-			response.setContentType("text/html; charset=UTF-8");
+			response.sendRedirect("visitorboard");
+		/*	response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println("<html><head><title>방명록 등록 결과</title></head>");
 			out.println("<body>");
 			out.println("<p>수정 성공입니다!</p>");
 			out.println("<a href='visitorboard'>목록으로</a>");
-			out.println("</body></html>");
+			out.println("</body></html>");*/
 		}catch(Exception e){
 			throw new ServletException(e);
 		}finally{
