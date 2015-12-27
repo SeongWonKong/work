@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,13 +25,15 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try{
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
 			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/studydb",
-					"study",
-					"study");
+					sc.getInitParameter("url"),
+					sc.getInitParameter("username"),
+					sc.getInitParameter("password"));
 			stmt = conn.createStatement();
+			
 			rs = stmt.executeQuery(
 					"select * from VISITOR_BOARD" +
 					" where VNO=" + request.getParameter("vno"));
@@ -40,11 +43,12 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.println("<html><head><title>방명록 등록</title></head>");
 			out.println("<body><h1>방명록 등록</h1>");
-			out.println("<form action='add' method='post'>");
+			out.println("<form action='modify' method='post'>");
 			out.println();
-			out.println("EMAIL : <input type='text' name='email' value='"+rs.getString("EMAIL")+"' disabled><br>");
-			out.println("암호 : <input type='password' name='password'><br>");
-			out.println("내용 : <input type='text' name='content' value="+rs.getString("CONTENT")+"'><br>");
+			out.println("EMAIL : <input type='text' name='email' value='"+rs.getString("EMAIL")+"' readonly><br>");
+			out.println("암호 : <input type='password' name='password' required><br>");
+			out.println("내용 : <input type='text' name='content' value='"+rs.getString("CONTENT")+"'><br>");
+			out.println("<input type='hidden' name='vno' value='"+ request.getParameter("vno") +"'>");
 			out.println("<input type='submit' value='수정하기'>");
 			out.println("<input type='reset' value='취소'>");
 			out.println("</form>");
@@ -68,24 +72,24 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 		PreparedStatement stmt = null;
 		
 		try{
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
 			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/studydb",
-					"study",
-					"study");
+					sc.getInitParameter("url"),
+					sc.getInitParameter("username"),
+					sc.getInitParameter("password"));
+			
 			stmt = conn.prepareStatement(
-					"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE)"
-					+ " VALUES (?,?,?,NOW())");
-			stmt.setString(1,  request.getParameter("email"));
-			stmt.setString(2,  request.getParameter("password"));
-			stmt.setString(3,  request.getParameter("content"));
+					"UPDATE VISITOR_BOARD SET CONTENT=? WHERE VNO="+request.getParameter("vno"));
+			stmt.setString(1,  request.getParameter("content"));
 			stmt.executeUpdate();
 			
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println("<html><head><title>방명록 등록 결과</title></head>");
 			out.println("<body>");
-			out.println("<p>등록 성공입니다!</p>");
+			out.println("<p>수정 성공입니다!</p>");
 			out.println("<a href='visitorboard'>목록으로</a>");
 			out.println("</body></html>");
 		}catch(Exception e){

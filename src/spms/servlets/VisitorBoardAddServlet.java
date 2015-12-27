@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,11 +40,13 @@ public class VisitorBoardAddServlet extends HttpServlet {
 		PreparedStatement stmt = null;
 		
 		try{
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
 			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/studydb",
-					"study",
-					"study");
+					sc.getInitParameter("url"),
+					sc.getInitParameter("username"),
+					sc.getInitParameter("password"));
+			
 			stmt = conn.prepareStatement(
 					"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE)"
 					+ " VALUES (?,?,?,NOW())");

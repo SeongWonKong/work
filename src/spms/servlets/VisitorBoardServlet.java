@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -25,12 +26,24 @@ public class VisitorBoardServlet extends GenericServlet {
 		ResultSet rs = null;
 		
 		try{
+			
+			/*
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			conn = DriverManager.getConnection(
 					"jdbc:mysql://localhost/studydb",
 					"study",
 					"study");
 			stmt = conn.createStatement();
+			*/
+			
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
+			conn = DriverManager.getConnection(
+					sc.getInitParameter("url"),
+					sc.getInitParameter("username"),
+					sc.getInitParameter("password"));
+			stmt = conn.createStatement();
+			
 			rs = stmt.executeQuery(
 					"select VNO,CONTENT,EMAIL,DATE" +
 					" from VISITOR_BOARD" +
