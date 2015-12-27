@@ -15,7 +15,7 @@
 이메일 : <input type='text' name='email'><br>
 비밀번호 : <input type='password' name='password'><br>
 내용 : <input type='text' name='content'><br>
-<input type='submit' value='추가'>
+<input type='submit' value='등록'>
 <input type='reset' value='취소'>
 </form>
 </body>
