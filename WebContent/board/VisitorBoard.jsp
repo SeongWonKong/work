@@ -1,8 +1,7 @@
-<%@ page import="spms.vo.Board" %>
-<%@ page import="java.util.ArrayList" %>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,28 +16,26 @@
 
 
 <table style="margin:0 auto; width:600px; text-align:center">
-<%
-ArrayList<Board> boards = (ArrayList<Board>)request.getAttribute("boards");
-for(Board board : boards){
-%>
+<c:forEach var="board" items="${boards}">
 <tr>
 <td style="height:20px">
-<%=board.getEmail() %>
-<%=board.getDate() %>
-<%=board.getTime() %>
+${board.email}
+${board.date}
+${board.time}
 </td>
 </tr>
 <tr>
 <td style="height:20px">
-<%=board.getContent() %>
-<a href='modify?vno=<%=board.getVno() %>'> [수정] </a><br>
+${board.content }
+<a href='modify?vno=${board.vno}'> [수정] </a><br>
 </td>
 </tr>
 <tr>
 <td style="height:15px">
 </td>
 </tr>
-<%} %>
+</c:forEach>
 </table>
+
 </body>
 </html>
