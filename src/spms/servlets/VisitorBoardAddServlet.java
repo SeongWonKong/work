@@ -36,20 +36,24 @@ public class VisitorBoardAddServlet extends HttpServlet {
 		PreparedStatement stmt = null;
 		
 		try{
-			ServletContext sc = this.getServletContext();
-			SecurityUtil securityUtil = new SecurityUtil();
-			String pswd = securityUtil.encryptSHA256(request.getParameter("password"));
-			
-			conn = (Connection)sc.getAttribute("conn");
-			
-			stmt = conn.prepareStatement(
-					"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE)"
-					+ " VALUES (?,?,?,NOW())");
-			stmt.setString(1,  request.getParameter("email"));
-			stmt.setString(2,  pswd);
-			stmt.setString(3,  request.getParameter("content"));
-			stmt.executeUpdate();
-			
+			EmailValidator ev = new EmailValidator();
+			if(ev.validate(request.getParameter("email"))){
+				ServletContext sc = this.getServletContext();
+				SecurityUtil securityUtil = new SecurityUtil();
+				String pswd = securityUtil.encryptSHA256(request.getParameter("password"));
+				
+				conn = (Connection)sc.getAttribute("conn");
+				
+				stmt = conn.prepareStatement(
+						"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE)"
+						+ " VALUES (?,?,?,NOW())");
+				stmt.setString(1,  request.getParameter("email"));
+				stmt.setString(2,  pswd);
+				stmt.setString(3,  request.getParameter("content"));
+				stmt.executeUpdate();
+			}else{
+				System.out.println("wrong email");
+			}
 			response.sendRedirect("visitorboard");
 		}catch(Exception e){
 			throw new ServletException(e);
