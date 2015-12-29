@@ -5,8 +5,10 @@ import java.util.Date;
 
 public class Board {
 
+	protected Date udate;
+	protected Time utime;
 	protected int no;
-	protected String email;
+	protected String email1;
 	protected String password;
 	protected String content;
 	protected Date date;
@@ -22,11 +24,11 @@ public class Board {
 	}
 	
 	public String getEmail(){
-		return email;
+		return email1;
 	}
 	
 	public Board setEmail(String email){
-		this.email = email;
+		this.email1 = email;
 		return this;
 	}
 
@@ -65,4 +67,21 @@ public class Board {
 		this.time = time;
 		return this;
 	}
+	
+	public Date getUdate(){
+		return udate;
+	}
+	
+	public Board setUdate(Date update_date){
+		this.udate = update_date;
+		return this;
+	}	
+	public Time getUtime(){
+		return utime;
+	}
+	
+	public Board setUtime(Time update_time){
+		this.utime = update_time;
+		return this;
+	}	
 }

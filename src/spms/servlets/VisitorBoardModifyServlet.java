@@ -93,10 +93,10 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			
 			
 			if(pw1.equals(pw2)){
-			stmt = conn.prepareStatement(
-					"UPDATE VISITOR_BOARD SET CONTENT=?, UPDATE_DATE=NOW() WHERE VNO="+request.getParameter("vno"));
-			stmt.setString(1,  request.getParameter("content"));
-			stmt.executeUpdate();
+				stmt = conn.prepareStatement(
+						"UPDATE VISITOR_BOARD SET CONTENT=?, UPDATE_DATE=NOW() WHERE VNO="+request.getParameter("vno"));
+				stmt.setString(1,  request.getParameter("content"));
+				stmt.executeUpdate();
 			}
 			
 			response.sendRedirect("visitorboard");

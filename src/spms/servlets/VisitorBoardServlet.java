@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import spms.vo.Board;
 
 
+
 @WebServlet("/visitorboard")
 public class VisitorBoardServlet extends GenericServlet {
 
@@ -36,9 +37,9 @@ public class VisitorBoardServlet extends GenericServlet {
 			stmt = conn.createStatement();
 			
 			rs = stmt.executeQuery(
-					"select VNO,CONTENT,EMAIL,DATE" +
+					"select VNO,CONTENT,EMAIL,DATE,update_date" +
 					" from VISITOR_BOARD" +
-					" order by VNO DESC");
+					" order by update_date DESC");
 			response.setContentType("text/html; charset=UTF-8");
 			
 			ArrayList<Board> boards = new ArrayList<Board>();
@@ -49,7 +50,8 @@ public class VisitorBoardServlet extends GenericServlet {
 						.setEmail(rs.getString("EMAIL"))
 						.setContent(rs.getString("CONTENT"))
 						.setDate(rs.getDate("DATE"))
-						.setTime(rs.getTime("DATE")));
+						.setTime(rs.getTime("DATE")).setUdate(rs.getDate("update_date")).setUtime(rs.getTime("update_date")));
+				
 			}
 			
 			request.setAttribute("boards", boards);

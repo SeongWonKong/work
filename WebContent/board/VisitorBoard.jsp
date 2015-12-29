@@ -19,9 +19,9 @@
 <c:forEach var="board" items="${boards}">
 <tr>
 <td style="height:20px">
-${board.email}
-${board.date}
-${board.time}
+이메일 : ${board.email}<br>
+작성시간(수정) : ${board.date}
+${board.time}<br>
 </td>
 </tr>
 <tr>

@@ -36,7 +36,7 @@ public class VisitorBoardAddServlet extends HttpServlet {
 		PreparedStatement stmt = null;
 		
 		try{
-			EmailValidator ev = new EmailValidator();
+			EmailValidator ev = new EmailValidator(); //email 유효성 체크(서버)
 			if(ev.validate(request.getParameter("email"))){
 				ServletContext sc = this.getServletContext();
 				SecurityUtil securityUtil = new SecurityUtil();
@@ -45,8 +45,8 @@ public class VisitorBoardAddServlet extends HttpServlet {
 				conn = (Connection)sc.getAttribute("conn");
 				
 				stmt = conn.prepareStatement(
-						"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE)"
-						+ " VALUES (?,?,?,NOW())");
+						"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE,update_date)"
+						+ " VALUES (?,?,?,NOW(),NOW())");
 				stmt.setString(1,  request.getParameter("email"));
 				stmt.setString(2,  pswd);
 				stmt.setString(3,  request.getParameter("content"));
