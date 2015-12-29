@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import security.sha256.SecurityUtil;
+import spms.dao.VisitorBoardModifyDao;
 import spms.vo.Board;
 
 @WebServlet("/modify")
@@ -27,38 +28,26 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			throws ServletException, IOException{
 		
 		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
+		//Statement stmt = null;
+		//ResultSet rs = null;
 		try{
 			
 			ServletContext sc = this.getServletContext();
 			
 			conn = (Connection)sc.getAttribute("conn");
 			
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(
-					"select * from VISITOR_BOARD" +
-					" where VNO=" + request.getParameter("vno"));
+			VisitorBoardModifyDao visitorBoardModifyDao = new VisitorBoardModifyDao();
+			visitorBoardModifyDao.setConnection(conn);
 			
-			rs.next();
+			request.setAttribute("board", visitorBoardModifyDao.getBoard(request.getParameter("vno")));
+			
 			response.setContentType("text/html; charset=UTF-8");
-			
-			Board board = new Board()
-					.setVno(rs.getInt("VNO"))
-					.setEmail(rs.getString("EMAIL"))
-					.setContent(rs.getString("CONTENT"))
-					.setDate(rs.getDate("DATE"));
-			
-			request.setAttribute("board", board);
-			
 			RequestDispatcher rd = request.getRequestDispatcher("/board/VisitorBoardModify.jsp");
 			rd.include(request, response);
 			
 
 		}catch(Exception e){
 			throw new ServletException(e);
-		}finally{
-			try {if(stmt!=null) stmt.close();} catch(Exception e){}
 		}
 		
 		
@@ -70,22 +59,18 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			throws ServletException, IOException{
 		request.setCharacterEncoding("UTF-8");
 		Connection conn = null;
-		Statement stmt1 = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 		String pw1, pw2;
 		try{
 			
 			ServletContext sc = this.getServletContext();
 			conn = (Connection)sc.getAttribute("conn");
-			stmt1 = conn.createStatement();		
-			rs = stmt1.executeQuery(
-					"select * from VISITOR_BOARD" +
-					" where VNO=" + request.getParameter("vno"));
 			
-			rs.next();
-			pw1 = rs.getString("PWD");//DB에 저장된 비밀번호
-			stmt1.close();
+			VisitorBoardModifyDao visitorBoardModifyDao = new VisitorBoardModifyDao();
+			visitorBoardModifyDao.setConnection(conn);
+			
+			pw1 = visitorBoardModifyDao.getPW(request.getParameter("vno"));
+			
 			SecurityUtil securityUtil = new SecurityUtil();
 			pw2 = securityUtil.encryptSHA256(request.getParameter("password"));
 			System.out.println(pw1);
@@ -93,18 +78,13 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 			
 			
 			if(pw1.equals(pw2)){
-				stmt = conn.prepareStatement(
-						"UPDATE VISITOR_BOARD SET CONTENT=?, UPDATE_DATE=NOW() WHERE VNO="+request.getParameter("vno"));
-				stmt.setString(1,  request.getParameter("content"));
-				stmt.executeUpdate();
+				visitorBoardModifyDao.updateBoard(request.getParameter("vno"),request.getParameter("content"));
 			}
 			
 			response.sendRedirect("visitorboard");
 			
 		}catch(Exception e){
 			throw new ServletException(e);
-		}finally{
-			try {if(stmt!=null) stmt.close();} catch(Exception e){}
 		}
 	}
 }

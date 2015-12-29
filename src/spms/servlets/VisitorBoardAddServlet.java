@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import security.sha256.SecurityUtil;
+import spms.dao.VisitorBoardAddDao;
 
 @WebServlet("/add")
 public class VisitorBoardAddServlet extends HttpServlet {
@@ -33,7 +34,7 @@ public class VisitorBoardAddServlet extends HttpServlet {
 			throws ServletException, IOException{
 		request.setCharacterEncoding("UTF-8");
 		Connection conn = null;
-		PreparedStatement stmt = null;
+	//	PreparedStatement stmt = null;
 		
 		try{
 			EmailValidator ev = new EmailValidator(); //email 유효성 체크(서버)
@@ -44,13 +45,18 @@ public class VisitorBoardAddServlet extends HttpServlet {
 				
 				conn = (Connection)sc.getAttribute("conn");
 				
+				VisitorBoardAddDao visitorBoardAddDao = new VisitorBoardAddDao();
+				visitorBoardAddDao.setConnection(conn);
+				
+				visitorBoardAddDao.insertDB(request.getParameter("email"),pswd,request.getParameter("content"));
+		/*		
 				stmt = conn.prepareStatement(
 						"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE,update_date)"
 						+ " VALUES (?,?,?,NOW(),NOW())");
 				stmt.setString(1,  request.getParameter("email"));
 				stmt.setString(2,  pswd);
 				stmt.setString(3,  request.getParameter("content"));
-				stmt.executeUpdate();
+				stmt.executeUpdate();*/
 			}else{
 				System.out.println("wrong email");
 			}
@@ -58,7 +64,7 @@ public class VisitorBoardAddServlet extends HttpServlet {
 		}catch(Exception e){
 			throw new ServletException(e);
 		}finally{
-			try {if(stmt!=null) stmt.close();} catch(Exception e){}
+		//	try {if(stmt!=null) stmt.close();} catch(Exception e){}
 		}
 	}
 }

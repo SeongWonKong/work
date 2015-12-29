@@ -20,8 +20,8 @@
 <tr>
 <td style="height:20px">
 이메일 : ${board.email}<br>
-작성시간(수정) : ${board.date}
-${board.time}<br>
+작성시간(수정) : ${board.udate}
+${board.utime}<br>
 </td>
 </tr>
 <tr>
