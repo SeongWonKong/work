@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import security.sha256.SecurityUtil;
-import spms.dao.VisitorBoardModifyDao;
+import spms.dao.VisitorBoardDao;
 import spms.vo.Board;
 
 @WebServlet("/modify")
@@ -27,19 +27,12 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) 
 			throws ServletException, IOException{
 		
-		Connection conn = null;
-		//Statement stmt = null;
-		//ResultSet rs = null;
 		try{
-			
 			ServletContext sc = this.getServletContext();
+						
+			VisitorBoardDao visitorBoardDao = (VisitorBoardDao)sc.getAttribute("visitorBoardDao");
 			
-			conn = (Connection)sc.getAttribute("conn");
-			
-			VisitorBoardModifyDao visitorBoardModifyDao = new VisitorBoardModifyDao();
-			visitorBoardModifyDao.setConnection(conn);
-			
-			request.setAttribute("board", visitorBoardModifyDao.getBoard(request.getParameter("vno")));
+			request.setAttribute("board", visitorBoardDao.getBoard(request.getParameter("vno")));
 			
 			response.setContentType("text/html; charset=UTF-8");
 			RequestDispatcher rd = request.getRequestDispatcher("/board/VisitorBoardModify.jsp");
@@ -58,27 +51,22 @@ public class VisitorBoardModifyServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		request.setCharacterEncoding("UTF-8");
-		Connection conn = null;
-		PreparedStatement stmt = null;
 		String pw1, pw2;
 		try{
 			
-			ServletContext sc = this.getServletContext();
-			conn = (Connection)sc.getAttribute("conn");
+			ServletContext sc = this.getServletContext();		
+			VisitorBoardDao visitorBoardDao = (VisitorBoardDao)sc.getAttribute("visitorBoardDao");
 			
-			VisitorBoardModifyDao visitorBoardModifyDao = new VisitorBoardModifyDao();
-			visitorBoardModifyDao.setConnection(conn);
-			
-			pw1 = visitorBoardModifyDao.getPW(request.getParameter("vno"));
+			pw1 = visitorBoardDao.getPW(request.getParameter("vno"));
 			
 			SecurityUtil securityUtil = new SecurityUtil();
-			pw2 = securityUtil.encryptSHA256(request.getParameter("password"));
-			System.out.println(pw1);
-			System.out.println(pw2);
-			
+			pw2 = securityUtil.encryptSHA256(request.getParameter("password"));			
 			
 			if(pw1.equals(pw2)){
-				visitorBoardModifyDao.updateBoard(request.getParameter("vno"),request.getParameter("content"));
+				visitorBoardDao.updateBoard(request.getParameter("vno"),request.getParameter("content"));
+				System.out.println("password correct!");
+			}else{
+				System.out.println("wrong password!");
 			}
 			
 			response.sendRedirect("visitorboard");

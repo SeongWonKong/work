@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import security.sha256.SecurityUtil;
-import spms.dao.VisitorBoardAddDao;
+import spms.dao.VisitorBoardDao;
 
 @WebServlet("/add")
 public class VisitorBoardAddServlet extends HttpServlet {
@@ -33,38 +33,25 @@ public class VisitorBoardAddServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		request.setCharacterEncoding("UTF-8");
-		Connection conn = null;
-	//	PreparedStatement stmt = null;
 		
 		try{
 			EmailValidator ev = new EmailValidator(); //email 유효성 체크(서버)
 			if(ev.validate(request.getParameter("email"))){
 				ServletContext sc = this.getServletContext();
 				SecurityUtil securityUtil = new SecurityUtil();
-				String pswd = securityUtil.encryptSHA256(request.getParameter("password"));
+				String pswd = securityUtil.encryptSHA256(request.getParameter("password"));//비밀번호 암호화
+	
+				VisitorBoardDao visitorBoardDao = (VisitorBoardDao)sc.getAttribute("visitorBoardDao");
 				
-				conn = (Connection)sc.getAttribute("conn");
-				
-				VisitorBoardAddDao visitorBoardAddDao = new VisitorBoardAddDao();
-				visitorBoardAddDao.setConnection(conn);
-				
-				visitorBoardAddDao.insertDB(request.getParameter("email"),pswd,request.getParameter("content"));
-		/*		
-				stmt = conn.prepareStatement(
-						"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE,update_date)"
-						+ " VALUES (?,?,?,NOW(),NOW())");
-				stmt.setString(1,  request.getParameter("email"));
-				stmt.setString(2,  pswd);
-				stmt.setString(3,  request.getParameter("content"));
-				stmt.executeUpdate();*/
+				visitorBoardDao.insertDB(request.getParameter("email"),pswd,request.getParameter("content"));
 			}else{
 				System.out.println("wrong email");
 			}
+			
 			response.sendRedirect("visitorboard");
+			
 		}catch(Exception e){
 			throw new ServletException(e);
-		}finally{
-		//	try {if(stmt!=null) stmt.close();} catch(Exception e){}
 		}
 	}
 }
