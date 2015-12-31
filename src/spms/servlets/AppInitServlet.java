@@ -1,4 +1,7 @@
-package spms.servlets;
+/* Listener 추가로 삭제 */
+
+
+/*package spms.servlets;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,4 +43,4 @@ public class AppInitServlet extends HttpServlet {
 			}
 		} catch(Exception e){}
 	}
-}
+}*/

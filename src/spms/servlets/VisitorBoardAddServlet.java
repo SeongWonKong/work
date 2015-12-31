@@ -1,10 +1,6 @@
 package spms.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -19,6 +15,11 @@ import spms.dao.VisitorBoardDao;
 
 @WebServlet("/add")
 public class VisitorBoardAddServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) 
 			throws ServletException, IOException{

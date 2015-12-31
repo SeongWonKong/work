@@ -25,22 +25,17 @@
 
   <!-- 서블릿 선언 -->
   <listener>
-  <listener-class>spms.listeners.ContextLoaderListener</listener-class>
+  	<listener-class>spms.listeners.ContextLoaderListener</listener-class>
   </listener>
-<!--
-<servlet>
-	<servlet-name>AppInitServlet</servlet-name>
-	<servlet-class>spms.servlets.AppInitServlet</servlet-class>
-	<load-on-startup>1</load-on-startup>
-</servlet>
+  
+<!-- listener 사용으로 필요 없어짐
+	<servlet>
+		<servlet-name>AppInitServlet</servlet-name>
+		<servlet-class>spms.servlets.AppInitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 -->
-
-  <servlet>
-  	<servlet-name>Hello</servlet-name>
-  	<servlet-class>lesson03.servlets.HelloWorld</servlet-class>
-  </servlet>
-
-  	
+ 	
   	
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

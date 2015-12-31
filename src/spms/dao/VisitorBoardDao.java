@@ -7,20 +7,29 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import spms.util.DBConnectionPool;
 import spms.vo.Board;
 
 public class VisitorBoardDao {
-	Connection connection;
+	//Connection connection;
 	Statement stmt = null;
 	ResultSet rs = null;
-	public void setConnection(Connection connection){
-		this.connection = connection;
+	//public void setConnection(Connection connection){
+	//	this.connection = connection;
+	//}
+	
+	DBConnectionPool connPool;
+	
+	public void setDbConnectionPool(DBConnectionPool connPool){
+		this.connPool = connPool;
 	}
 	
 	public List<Board> selectList() throws Exception{
+		Connection connection;
 		Statement stmt = null;
 		ResultSet rs = null;
 		try{
+			connection = connPool.getConnection();
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(
 					"select VNO,CONTENT,EMAIL,DATE,update_date" +
@@ -49,9 +58,11 @@ public class VisitorBoardDao {
 	}
 	
 	public void insertDB(String email,String pw, String content) throws Exception{
+		Connection connection;
 		PreparedStatement stmt = null;
 
 		try{
+			connection = connPool.getConnection();
 			stmt = connection.prepareStatement(
 					"INSERT INTO VISITOR_BOARD(EMAIL,PWD,CONTENT,DATE,update_date)"
 					+ " VALUES (?,?,?,NOW(),NOW())");
@@ -67,8 +78,10 @@ public class VisitorBoardDao {
 	}
 	
 	public Board getBoard(String vno) throws Exception{
+		Connection connection;
 
 		try{
+			connection = connPool.getConnection();
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(
 					"select * from VISITOR_BOARD" +
@@ -92,7 +105,10 @@ public class VisitorBoardDao {
 	
 	public String getPW(String vno) throws Exception{
 		String pw;
+		Connection connection;
+
 		try{
+			connection = connPool.getConnection();
 			stmt = connection.createStatement();		
 			rs = stmt.executeQuery(
 					"select * from VISITOR_BOARD" +
@@ -112,8 +128,11 @@ public class VisitorBoardDao {
 	}
 	
 	public void updateBoard(String vno, String content) throws Exception{
+		Connection connection;
+
 		try{
 			PreparedStatement stmt = null;
+			connection = connPool.getConnection();
 			stmt = connection.prepareStatement(
 					"UPDATE VISITOR_BOARD SET CONTENT=?, UPDATE_DATE=NOW() WHERE VNO="+vno);
 			stmt.setString(1, content);

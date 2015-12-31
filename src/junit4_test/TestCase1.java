@@ -30,6 +30,8 @@ public class TestCase1 {
 		assertTrue(ev.validate("hh12123@hooo.aad"));
 		assertTrue(ev.validate("hhc___@hooo.acb"));
 		assertTrue(ev.validate("seong.won.kong@naver.com"));
+		
+		// junit4 사용 다른 방법 찾아보기
 
 	}
 }

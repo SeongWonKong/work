@@ -5,14 +5,15 @@ import java.util.Date;
 
 public class Board {
 
-	protected Date udate;
-	protected Time utime;
 	protected int no;
 	protected String email1;
 	protected String password;
 	protected String content;
 	protected Date date;
 	protected Time time;
+	protected Date udate;
+	protected Time utime;	
+	
 	
 	public int getVno(){
 		return no;
